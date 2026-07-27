@@ -1,0 +1,60 @@
+# ═══════════════════════════════════════════════════════════════
+#  YOUR TEAM'S SETTINGS — change these first!
+# ═══════════════════════════════════════════════════════════════
+
+# Your team name. Shows up at the top of every page.
+title: Team Name Goes Here
+
+# One sentence about your team. Shows up in Google search results.
+description: An FLL robotics team at Lansing Tech Studio.
+
+# Change YOUR-USERNAME to your team's GitHub username in both lines.
+url: "https://YOUR-USERNAME.github.io"
+repo_url: "https://github.com/YOUR-USERNAME/YOUR-USERNAME.github.io"
+
+# ⚠️  Leave this empty. Your site lives at the top level of your
+# github.io address, so there's nothing to put here. Adding
+# anything will break every link and image on the site.
+baseurl: ""
+
+# Links in the blue bar at the top of the page.
+nav:
+  - title: Home
+    url: /
+  - title: About
+    url: /about/
+
+# ═══════════════════════════════════════════════════════════════
+#  BELOW HERE IS PLUMBING — you shouldn't need to touch it.
+# ═══════════════════════════════════════════════════════════════
+
+# The shared Lansing Tech Studio design. Coach Brendon updates this
+# centrally; your site picks up changes next time you publish a post.
+remote_theme: Lansing-Tech-Studio/lts-team-blog-theme@v1
+
+markdown: kramdown
+highlighter: rouge
+permalink: /:year/:month/:day/:title/
+
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+  - jekyll-sitemap
+
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: "post"
+  - scope:
+      path: ""
+      type: "pages"
+    values:
+      layout: "page"
+
+exclude:
+  - Gemfile
+  - Gemfile.lock
+  - README.md
+  - vendor
