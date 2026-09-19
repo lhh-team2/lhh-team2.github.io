@@ -94,9 +94,61 @@ Composition: keep all characters in the lower two-thirds. Leave the top third as
 
 ---
 
-## Future: game art template
+## Game sprites (phase 1)
 
-The game is undecided. When it is, fill in this Composition Block per character and pose; nothing above needs to change. Always upload the character's sheet.
+Rules and sprite list come from [`game.md`](game.md). Phase 1 uses one static sprite per thing; the game code adds the bobbing, leaning, and dust. Paste the Setup message first, as always. Save results into `game/sprites/` under the filename given, then shrink each to roughly 512 px wide before using it in the game.
+
+### 9–11. Mounted Riders
+
+Run three times, replacing `<RIDER>` with `SILVER RIDER`, `BLACK RIDER`, `GREY RIDER`. Upload: that Rider's sheet and the Robot Horse sheet. Files: `silver-rider.png`, `black-rider.png`, `grey-rider.png`.
+
+```text
+Create a game sprite of the <RIDER> riding the ROBOT HORSE, using the attached sheets as exact character references. Landscape 3:2, transparent background, no ground, no ground shadow, no dust, no scenery. Strict side view facing right, whole horse and rider visible, centered, filling about 85% of the frame. The horse is mid-gallop with all four legs tucked under it. The rider leans forward slightly, one hand on the reins, the other holding a coiled tan lasso at its side. No text.
+```
+
+### 12. Toad Bandit (running)
+
+Upload: Toad Bandit sheet. File: `toad-bandit.png`.
+
+```text
+Create a game sprite of the TOAD BANDIT, using the attached sheet as the exact character reference. Square 1:1, transparent background, no ground, no ground shadow, no dust, no scenery. Strict side view facing right, full body, centered, filling about 80% of the frame. Sprinting upright on its back legs, clutching its "$" money bag against its chest with both arms, head turned to glance back over its shoulder in comic panic. No text other than the "$" on the bag.
+```
+
+### 13. Toad Bandit (Lasso Showdown close-up)
+
+Upload: Toad Bandit sheet. File: `toad-showdown.png`.
+
+```text
+Create a close-up game sprite of the TOAD BANDIT, using the attached sheet as the exact character reference. Square 1:1, transparent background, no scenery. Three-quarter view facing right, shown from the waist up, filling about 85% of the frame. A loop of tan lasso rope is cinched around its middle, pinning its arms, with the rope leading off the left edge of the image. It strains forward trying to pull away, eyes bulging, sweat drops flying, still hugging its "$" money bag. Funny, not distressing. No text other than the "$" on the bag.
+```
+
+### 14. Props
+
+One prompt, one image; cut the three props apart afterwards. Files: `loot-bag.png`, `prickly-pear.png`, `termite-mound.png`.
+
+```text
+Create a sheet of three separate game props in a single horizontal row, evenly spaced, not touching or overlapping. Landscape 3:2, transparent background, no ground, no ground shadows. Each prop is seen from the side at eye level:
+1. A plump tan burlap money bag tied with rope at the neck, marked with a single "$", sitting upright.
+2. A clump of prickly pear cactus: five or six flat green oval pads with short spines and a few pink-red fruits, about as tall as it is wide.
+3. A tall, narrow red ochre termite mound with lumpy ridged sides, about twice as tall as it is wide.
+No text other than the "$" on the bag.
+```
+
+### 15. Background strip
+
+File: `background.png`. This scrolls sideways forever, so the left and right edges must match. If the seam shows, ask: *"make the left and right edges line up so the image tiles seamlessly."*
+
+```text
+Create a wide scrolling game background of the Australian outback at sunset, 3:2 landscape, designed to tile seamlessly left-to-right: the left and right edges must line up exactly. No characters, no animals, no text.
+Top 40%: sky in a smooth gradient from sunset orange at the horizon to dusk purple at the top, with generic flat-topped rock outcrops, a few scattered gum trees, and one distant farm windmill with a water tank on the horizon (do not depict Uluru or any real landmark).
+Bottom 60%: completely flat, empty red ochre earth with only very subtle tonal variation. Nothing may be drawn on it (no plants, rocks, tracks, or shadows) because game lanes are drawn over this area.
+```
+
+---
+
+## Template for further game art
+
+For any pose not covered above (or a later phase), fill in this Composition Block per character and pose; nothing above needs to change. Always upload the character's sheet.
 
 ```text
 Create a game sprite of the <CHARACTER>, using the attached sheet as the exact character reference. Square 1:1, transparent background, no ground shadow, no scenery. Full body, centered, side view facing right, filling about 80% of the frame. Pose: <POSE, e.g. "galloping", "lasso wind-up", "running in panic", "caught in lasso">. No text.
