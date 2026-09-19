@@ -23,6 +23,8 @@ nav:
     url: /
   - title: About
     url: /about/
+  - title: Game
+    url: /game/
 
 # ═══════════════════════════════════════════════════════════════
 #  BELOW HERE IS PLUMBING — you shouldn't need to touch it.
@@ -59,4 +61,5 @@ exclude:
   - README.md
   - CONTEXT.md
   - docs
+  - game/logic.test.js
   - vendor
