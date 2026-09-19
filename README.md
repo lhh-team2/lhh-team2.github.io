@@ -1,33 +1,6 @@
-# Team Blog Template
+# Team 2 - Terminators
 
-A ready-to-go blog for a Lansing Tech Studio robotics team. Everything is edited
-in the browser at github.com — you don't need to install anything.
-
-## Setting up your team's blog (once, at the start)
-
-1. Log in to GitHub on your team's Chromebook, as your team account.
-2. On this repo, click the green **Use this template** → **Create a new
-   repository**.
-3. Name it **your GitHub username followed by `.github.io`** — nothing else.
-   If your account is `lts-team1`, the repo is named:
-
-       lts-team1.github.io
-
-   Copy your username exactly as GitHub spells it. This special name is what
-   puts your blog at the top level of your own web address.
-4. Set it to **Public** and click **Create repository**.
-5. Check **Settings** → **Pages**. It usually turns itself on for a
-   `.github.io` repo — you should see "Deploy from a branch", branch **main**,
-   folder **/ (root)**. If it's not set that way, set it and click Save.
-6. Open `_config.yml` and fill in the settings at the top — your team name,
-   description, and your username in the two links. Commit the change.
-7. Wait a minute or two, then visit your site:
-
-   `https://YOUR-USERNAME.github.io/`
-
-If the page loads but looks like plain text with no colors, check that
-`baseurl` in `_config.yml` is still empty (`baseurl: ""`). That's the fix
-almost every time.
+<https://lhh-team2.github.io/>
 
 ## Writing a post
 
