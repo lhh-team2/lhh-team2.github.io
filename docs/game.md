@@ -82,7 +82,7 @@ Any screen other than the Run returns to Title after 30 s without input, so the 
 
 ## Art
 
-Static transparent sprites in `game/sprites/`; the code supplies gallop bob, lean on Lane change, dust puffs, and squash-and-stretch. Prompts are in [`art-prompts.md`](art-prompts.md#game-sprites-phase-1).
+Static transparent sprites in `game/sprites/`, made from the full-size originals in `art/sprites/` by `python3 art/make-sprites.py`; the code supplies gallop bob, lean on Lane change, dust puffs, and squash-and-stretch. Prompts are in [`art-prompts.md`](art-prompts.md#game-sprites-phase-1).
 
 | File | What |
 |---|---|
@@ -90,7 +90,7 @@ Static transparent sprites in `game/sprites/`; the code supplies gallop bob, lea
 | `toad-bandit.png` | Toad Bandit sprinting, facing right |
 | `toad-showdown.png` | Lasso Showdown close-up |
 | `loot-bag.png`, `prickly-pear.png`, `termite-mound.png` | props |
-| `background.png` | sideways-tiling outback strip with empty ground for the Lanes |
+| `background.jpg` | sideways-scrolling outback strip with empty ground for the Lanes |
 
 ## The team still needs to write
 

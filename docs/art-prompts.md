@@ -96,7 +96,7 @@ Composition: keep all characters in the lower two-thirds. Leave the top third as
 
 ## Game sprites (phase 1)
 
-Rules and sprite list come from [`game.md`](game.md). Phase 1 uses one static sprite per thing; the game code adds the bobbing, leaning, and dust. Paste the Setup message first, as always. Save results into `game/sprites/` under the filename given, then shrink each to roughly 512 px wide before using it in the game.
+Rules and sprite list come from [`game.md`](game.md). Phase 1 uses one static sprite per thing; the game code adds the bobbing, leaning, and dust. Paste the Setup message first, as always. Save each full-size result into `art/sprites/` under the filename given, then run `python3 art/make-sprites.py` from the repo root. It erases ChatGPT's faint glow, trims the empty margins, shrinks everything, and writes the game-ready files to `game/sprites/`.
 
 ### 9–11. Mounted Riders
 
@@ -136,7 +136,7 @@ No text other than the "$" on the bag.
 
 ### 15. Background strip
 
-File: `background.png`. This scrolls sideways forever, so the left and right edges must match. If the seam shows, ask: *"make the left and right edges line up so the image tiles seamlessly."*
+File: `background.png`. This scrolls sideways forever. The game flips every second copy, so the edges always line up even if ChatGPT's don't.
 
 ```text
 Create a wide scrolling game background of the Australian outback at sunset, 3:2 landscape, designed to tile seamlessly left-to-right: the left and right edges must line up exactly. No characters, no animals, no text.

@@ -22,17 +22,18 @@ const RIDERS = [
 const $ = (id) => document.getElementById(id);
 const canvas = $("canvas");
 const ctx = canvas.getContext("2d");
+ctx.scale(canvas.width / W, canvas.height / H); // the canvas has extra pixels so big screens stay sharp
 const stage = $("stage");
 const money = (n) => "$" + n.toLocaleString("en-US");
 const pickOne = (list) => list[Math.floor(Math.random() * list.length)];
 
-// Sprites are optional: until a file exists in game/sprites/, a simple drawn shape stands in.
+// Sprites are made by art/make-sprites.py. If a file is missing, a simple drawn shape stands in.
 const SPRITES = {};
-for (const name of ["silver-rider", "black-rider", "grey-rider", "toad-bandit", "toad-showdown",
-  "loot-bag", "prickly-pear", "termite-mound", "background"]) {
+for (const file of ["silver-rider.png", "black-rider.png", "grey-rider.png", "toad-bandit.png",
+  "toad-showdown.png", "loot-bag.png", "prickly-pear.png", "termite-mound.png", "background.jpg"]) {
   const img = new Image();
-  img.onload = () => { SPRITES[name] = img; };
-  img.src = `sprites/${name}.png`;
+  img.onload = () => { SPRITES[file.split(".")[0]] = img; };
+  img.src = "sprites/" + file;
 }
 
 let screen = "title";
@@ -379,8 +380,16 @@ const ITEM_HEIGHT = { "loot-bag": 46, "prickly-pear": 62, "termite-mound": 84 };
 function drawBackground(dist) {
   const bg = SPRITES.background;
   if (bg) {
+    // Every second copy is flipped, so the edges always line up however the picture was drawn.
     const width = bg.width * H / bg.height;
-    for (let x = -((dist * 0.25) % width); x < W; x += width) ctx.drawImage(bg, x, 0, width, H);
+    const scrolled = dist * 0.25;
+    for (let i = Math.floor(scrolled / width); i * width - scrolled < W; i++) {
+      const x = Math.round(i * width - scrolled);
+      ctx.save();
+      if (i % 2) { ctx.translate(2 * x + width, 0); ctx.scale(-1, 1); }
+      ctx.drawImage(bg, x, 0, width + 1, H);
+      ctx.restore();
+    }
   } else {
     const sky = ctx.createLinearGradient(0, 0, 0, GROUND_Y);
     sky.addColorStop(0, "#5B3A8C");
@@ -476,15 +485,25 @@ function drawShowdown() {
 
   const pull = s.result === "win" ? 1 : s.bar;
   const shake = s.result ? 0 : Math.sin(run.clock * 40) * 3;
-  const toadX = (s.result === "lose" ? 760 + (1.3 - s.resultTimer) * 500 : 760 - pull * 200) + shake;
-  ctx.strokeStyle = "#D9B97A";
-  ctx.lineWidth = 7;
-  ctx.beginPath();
-  ctx.moveTo(250, 330);
-  ctx.quadraticCurveTo((250 + toadX) / 2, 330 + (1 - pull) * 60, toadX - 60, 350);
-  if (s.result !== "lose") ctx.stroke();
+  const toadX = (s.result === "lose" ? 780 + (1.3 - s.resultTimer) * 600 : 780 - pull * 180) + shake;
+  // The rope meets the one painted into the toad-showdown sprite, which leaves its left edge 56% of the way down.
+  const toadH = 340;
+  const img = SPRITES["toad-showdown"];
+  const ropeX = img ? toadX - toadH * img.width / img.height / 2 + 6 : toadX - 100;
+  const ropeY = H - toadH * (img ? 0.436 : 0.35);
+  if (s.result !== "lose") {
+    ctx.lineCap = "round";
+    for (const [color, width] of [["#1B1B2F", 17], ["#D9A441", 11]]) {
+      ctx.strokeStyle = color;
+      ctx.lineWidth = width;
+      ctx.beginPath();
+      ctx.moveTo(190, 320);
+      ctx.quadraticCurveTo((190 + ropeX) / 2, (320 + ropeY) / 2 + (1 - pull) * 70, ropeX, ropeY);
+      ctx.stroke();
+    }
+  }
   drawSprite(rider.id + "-rider", 210, 470, 280, FALLBACK.rider);
-  drawSprite("toad-showdown", toadX, 480, 300, FALLBACK.toad);
+  drawSprite("toad-showdown", toadX, H, toadH, FALLBACK.toad);
 
   if (s.intro > 0) return text("LASSO SHOWDOWN!", W / 2, 120, 64, "#FFB703");
   if (s.result === "win") return text("GOTCHA!  +" + money(run.toads[run.toad.index].value), W / 2, 120, 58, "#2ECC71");
@@ -589,9 +608,13 @@ function saveAs(codename) {
 $("riders").append(...RIDERS.map((choice) => {
   const button = document.createElement("button");
   button.type = "button";
-  const swatch = button.appendChild(document.createElement("span"));
+  const swatch = document.createElement("span");
   swatch.className = "swatch";
   swatch.style.background = `linear-gradient(${choice.body} 70%, ${choice.accent} 70%)`;
+  const picture = button.appendChild(new Image());
+  picture.alt = "";
+  picture.onerror = () => picture.replaceWith(swatch);
+  picture.src = `sprites/${choice.id}-rider.png`;
   button.append(choice.name);
   button.addEventListener("click", () => {
     rider = choice;

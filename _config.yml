@@ -61,5 +61,6 @@ exclude:
   - README.md
   - CONTEXT.md
   - docs
+  - art
   - game/logic.test.js
   - vendor
