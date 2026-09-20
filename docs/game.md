@@ -78,7 +78,7 @@ Any screen other than the Run returns to Title after 30 s without input, so the 
 - `game/index.html` has **no front matter**, so Jekyll copies it untouched and the game gets the whole screen.
 - Plain `<canvas>` and vanilla JavaScript. No framework, no build step.
 - Every tunable number (times, gears, spawn chances, green-zone widths, needle speeds, drain rates, payouts, admin code) lives in one `CONFIG` object so the team can balance the game without touching logic. The toad facts and Codename word lists sit beside it.
-- No sound in phase 1.
+- Music: one looping clip, `game/music/run.ogg`, plays during the Run (made with [`music-prompts.md`](music-prompts.md); volume is `musicVolume` in `CONFIG`). No sound effects in phase 1.
 
 ## Art
 
@@ -102,7 +102,7 @@ Static transparent sprites in `game/sprites/`, made from the full-size originals
 ## Later phases
 
 - Firebase leaderboard shared across devices. Admin actions need real authentication first (ADR 0001).
-- Sound, more animation frames, Riders with different stats.
+- Sound effects, title-screen music, more animation frames, Riders with different stats.
 
 ---
 

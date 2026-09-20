@@ -531,12 +531,45 @@ function drawShowdown() {
   text(s.time.toFixed(1), W / 2, 190, 36, s.time < 2 ? "#FF6B5E" : "#EADFB4");
 }
 
+// ─────────────────────────────── Music ───────────────────────────────
+// Made with docs/music-prompts.md. Plays through Web Audio, never <audio loop>, which
+// leaves a gap every time the clip repeats.
+
+const audio = new AudioContext();
+const volume = audio.createGain();
+volume.gain.value = CONFIG.musicVolume;
+volume.connect(audio.destination);
+let runMusic = null; // the decoded clip. If the file is missing or won't decode, the game plays silent.
+let playing = null;
+
+fetch("music/run.ogg")
+  .then((response) => response.arrayBuffer())
+  .then((bytes) => audio.decodeAudioData(bytes))
+  .then((clip) => { runMusic = clip; setMusic(screen === "run"); })
+  .catch(() => {});
+
+function setMusic(on) {
+  playing?.stop();
+  playing = null;
+  if (!on || !runMusic) return;
+  audio.resume(); // browsers keep audio paused until the first click or key press
+  playing = audio.createBufferSource();
+  playing.buffer = runMusic;
+  playing.loop = true;
+  playing.connect(volume);
+  playing.start();
+}
+
+// The Run freezes while the tab is hidden, so the music does too.
+document.addEventListener("visibilitychange", () => { document.hidden ? audio.suspend() : audio.resume(); });
+
 // ─────────────────────────────── Screens ───────────────────────────────
 
 let focusTimer = 0;
 
 function show(name, focusId) {
   screen = name;
+  setMusic(name === "run");
   stage.classList.toggle("running", name === "run");
   for (const el of document.querySelectorAll(".screen")) el.classList.toggle("on", el.id === "screen-" + name);
   lastInput = performance.now();

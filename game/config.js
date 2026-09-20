@@ -45,6 +45,8 @@ const CONFIG = {
   showdownDrain: 0.2, // per second, for the first toad
   showdownDrainPerCaught: 0.04, // extra drain for each toad already caught
 
+  musicVolume: 0.6, // 0 = silent, 1 = full volume
+
   idleResetSeconds: 30,
   leaderboardSize: 50,
   leaderboardShown: 10,
