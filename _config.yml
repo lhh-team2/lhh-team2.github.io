@@ -17,6 +17,9 @@ repo_url: "https://github.com/lhh-team2/lhh-team2.github.io"
 # anything will break every link and image on the site.
 baseurl: ""
 
+# The little icon browsers show on the tab.
+favicon: /assets/images/favicon.png
+
 # Links in the blue bar at the top of the page.
 nav:
   - title: Home
