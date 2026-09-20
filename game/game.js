@@ -467,7 +467,7 @@ function drawHud() {
   const r = run;
   box("rgba(27, 27, 47, .8)", 0, 0, W, 46);
   const seconds = Math.ceil(Math.max(0, r.time));
-  text(`${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`, 20, 33, 28,
+  text(`${Math.floor(seconds / 60)}:${String(seconds % 60).padStart(2, "0")}`, 64, 33, 28,
     seconds <= 10 ? "#FF6B5E" : "#EADFB4", "left");
   text(money(r.bounty), W / 2, 34, 30, "#FFB703");
   r.toads.forEach((toad, i) => {
@@ -535,33 +535,47 @@ function drawShowdown() {
 // Made with docs/music-prompts.md. Plays through Web Audio, never <audio loop>, which
 // leaves a gap every time the clip repeats.
 
+const MUTE_KEY = "terminators.muted";
 const audio = new AudioContext();
 const volume = audio.createGain();
 volume.gain.value = CONFIG.musicVolume;
 volume.connect(audio.destination);
-let runMusic = null; // the decoded clip. If the file is missing or won't decode, the game plays silent.
-let playing = null;
+let muted = false;
+try { muted = localStorage.getItem(MUTE_KEY) === "1"; } catch { /* private browsing: start unmuted */ }
 
+// If the file is missing or won't decode, the game plays silent.
 fetch("music/run.ogg")
   .then((response) => response.arrayBuffer())
   .then((bytes) => audio.decodeAudioData(bytes))
-  .then((clip) => { runMusic = clip; setMusic(screen === "run"); })
+  .then((clip) => {
+    const music = audio.createBufferSource();
+    music.buffer = clip;
+    music.loop = true;
+    music.connect(volume);
+    music.start();
+  })
   .catch(() => {});
 
-function setMusic(on) {
-  playing?.stop();
-  playing = null;
-  if (!on || !runMusic) return;
-  audio.resume(); // browsers keep audio paused until the first click or key press
-  playing = audio.createBufferSource();
-  playing.buffer = runMusic;
-  playing.loop = true;
-  playing.connect(volume);
-  playing.start();
+// Muting pauses the whole AudioContext, so unmuting picks the tune up where it stopped.
+function syncMusic() {
+  if (muted || document.hidden) audio.suspend();
+  else audio.resume();
+  $("mute").textContent = muted ? "🔇" : "🔊";
+  $("mute").setAttribute("aria-pressed", muted);
 }
 
-// The Run freezes while the tab is hidden, so the music does too.
-document.addEventListener("visibilitychange", () => { document.hidden ? audio.suspend() : audio.resume(); });
+$("mute").addEventListener("click", () => {
+  muted = !muted;
+  try { localStorage.setItem(MUTE_KEY, muted ? "1" : "0"); } catch { /* not remembered, still works */ }
+  if (screen === "run") $("mute").blur(); // or the next Space press would toggle it again
+  syncMusic();
+});
+
+// Browsers keep audio paused until the first click or key press, so every input retries.
+addEventListener("pointerdown", syncMusic);
+addEventListener("keydown", syncMusic);
+document.addEventListener("visibilitychange", syncMusic);
+syncMusic();
 
 // ─────────────────────────────── Screens ───────────────────────────────
 
@@ -569,7 +583,6 @@ let focusTimer = 0;
 
 function show(name, focusId) {
   screen = name;
-  setMusic(name === "run");
   stage.classList.toggle("running", name === "run");
   for (const el of document.querySelectorAll(".screen")) el.classList.toggle("on", el.id === "screen-" + name);
   lastInput = performance.now();

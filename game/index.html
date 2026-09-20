@@ -69,6 +69,11 @@
       font-size: 3.6cqh; border-radius: 3cqh; display: none; opacity: .92; }
     @media (pointer: coarse) { #stage.running #giddyup { display: block; } }
 
+    /* Music on/off, top-left on every screen. The Run's clock is drawn just to its right. */
+    #mute { position: absolute; z-index: 2; left: 1cqw; top: .8cqh; width: 7cqh; height: 7cqh; padding: 0;
+      font-size: 3.4cqh; border-width: .4cqh; border-radius: 50%; }
+    #mute[aria-pressed="true"] { background: var(--cream); }
+
     #rotate { position: fixed; inset: 0; z-index: 9; display: none; place-items: center; text-align: center;
       background: var(--navy); font-size: 6vw; padding: 8vw; }
     @media (pointer: coarse) and (orientation: portrait) { #rotate { display: grid; } }
@@ -78,6 +83,7 @@
   <div id="stage">
     <canvas id="canvas" width="1920" height="1080"></canvas>
     <button id="giddyup" type="button">GIDDY-UP!</button>
+    <button id="mute" type="button" aria-label="Mute music" aria-pressed="false">🔊</button>
 
     <section class="screen on" id="screen-title">
       <h1>TERMINATORS</h1>
