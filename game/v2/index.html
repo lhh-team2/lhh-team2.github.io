@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover, user-scalable=no">
+  <title>Terminators: The Game</title>
+  <link rel="icon" href="/assets/images/badge-no-text.png">
+  <style>
+    :root {
+      --navy: #1B1B2F; --ochre: #B5452A; --orange: #F4923B; --purple: #5B3A8C;
+      --cream: #EADFB4; --teal: #2EC4B6; --amber: #FFB703; --rope: #D9B97A;
+    }
+    * { box-sizing: border-box; }
+    html, body { margin: 0; height: 100%; background: var(--navy); color: var(--cream);
+      font-family: "Trebuchet MS", system-ui, sans-serif; overflow: hidden;
+      touch-action: manipulation; -webkit-user-select: none; user-select: none; }
+    body { display: grid; place-items: center; }
+
+    /* 16:9 stage, as big as fits */
+    #stage { position: relative; width: min(100vw, calc(100dvh * 16 / 9)); aspect-ratio: 16 / 9;
+      container-type: size; overflow: hidden; }
+    canvas { position: absolute; inset: 0; width: 100%; height: 100%; display: block; }
+
+    .screen { position: absolute; inset: 0; display: none; flex-direction: column; align-items: center;
+      justify-content: center; gap: 2cqh; padding: 3cqh 4cqw; text-align: center; font-size: 3.4cqh;
+      background: linear-gradient(var(--purple), var(--orange) 70%, var(--ochre) 70%); overflow-y: auto; }
+    .screen.on { display: flex; }
+    h1 { margin: 0; font-size: 9cqh; letter-spacing: .06em; color: var(--cream);
+      font-family: Rockwell, "Roboto Slab", Georgia, serif; text-shadow: .4cqh .4cqh 0 var(--navy); }
+    h2 { margin: 0; font-size: 6cqh; font-family: Rockwell, "Roboto Slab", Georgia, serif;
+      text-shadow: .3cqh .3cqh 0 var(--navy); }
+    p { margin: 0; }
+    .panel { background: rgba(27, 27, 47, .85); border: .5cqh solid var(--navy); border-radius: 2cqh;
+      padding: 2cqh 2.5cqw; }
+    .row { display: flex; gap: 2cqw; align-items: stretch; justify-content: center; }
+
+    button { font: inherit; font-weight: bold; color: var(--navy); background: var(--amber);
+      border: .5cqh solid var(--navy); border-radius: 1.6cqh; padding: 1.2cqh 3cqw; cursor: pointer; }
+    button:focus-visible, input:focus-visible { outline: .6cqh solid var(--teal); outline-offset: .3cqh; }
+    button.big { font-size: 5cqh; padding: 1.6cqh 5cqw; }
+    button.plain { background: var(--cream); }
+    button.link { background: none; border: none; color: var(--cream); text-decoration: underline;
+      font-weight: normal; padding: .5cqh 1cqw; }
+    input { font: inherit; font-size: 4cqh; text-align: center; padding: 1cqh 2cqw; width: 50cqw;
+      border: .5cqh solid var(--navy); border-radius: 1.6cqh; background: var(--cream); color: var(--navy);
+      -webkit-user-select: text; user-select: text; }
+    .error { color: var(--amber); min-height: 1.3em; }
+
+    .riders button { display: flex; flex-direction: column; align-items: center; gap: 1cqh;
+      background: var(--cream); width: 17cqw; padding: 1.2cqh 1cqw; font-size: 2.8cqh; }
+    .riders button[aria-pressed="true"] { background: var(--amber); transform: scale(1.07); }
+    .riders img { height: 11cqh; }
+    .riders .swatch { width: 9cqh; height: 9cqh; border-radius: 50%; border: .5cqh solid var(--navy); }
+    .howto { font-size: 2.6cqh; }
+    .howto div { width: 20cqw; }
+    .howto b { display: block; font-size: 3.4cqh; color: var(--amber); }
+
+    table { border-collapse: collapse; font-size: 2.8cqh; }
+    td, th { padding: .5cqh 1.6cqw; text-align: left; }
+    td.num, th.num { text-align: right; font-variant-numeric: tabular-nums; }
+    tr.me { background: var(--amber); color: var(--navy); font-weight: bold; }
+    .codename { font-size: 8cqh; color: var(--amber); font-family: Rockwell, "Roboto Slab", Georgia, serif;
+      text-shadow: .3cqh .3cqh 0 var(--navy); }
+    .bounty { font-size: 10cqh; color: var(--amber); font-weight: bold; text-shadow: .4cqh .4cqh 0 var(--navy); }
+    #screen-admin { justify-content: flex-start; }
+
+    /* Touch-only GIDDY-UP button, beside the meter */
+    #giddyup { position: absolute; right: 2cqw; bottom: 2.5cqh; width: 19cqw; height: 17cqh;
+      font-size: 3.6cqh; border-radius: 3cqh; display: none; opacity: .92; }
+    @media (pointer: coarse) { #stage.running #giddyup { display: block; } }
+
+    #rotate { position: fixed; inset: 0; z-index: 9; display: none; place-items: center; text-align: center;
+      background: var(--navy); font-size: 6vw; padding: 8vw; }
+    @media (pointer: coarse) and (orientation: portrait) { #rotate { display: grid; } }
+  </style>
+</head>
+<body>
+  <div id="stage">
+    <canvas id="canvas" width="1920" height="1080"></canvas>
+    <button id="giddyup" type="button">GIDDY-UP!</button>
+
+    <section class="screen on" id="screen-title">
+      <h1>TERMINATORS</h1>
+      <div class="row">
+        <div>
+          <p>Pick your Rider</p>
+          <div class="row riders" id="riders"></div>
+        </div>
+        <div class="panel" id="title-board"></div>
+      </div>
+      <div class="row panel howto">
+        <div><b>↑ ↓ or tap</b>Switch Lanes. Grab Loot Bags, dodge cactus and termite mounds.</div>
+        <div><b>SPACE</b>Stop the needle in the GREEN to gallop faster. Red slows you down.</div>
+        <div><b>MASH SPACE</b>Catch up to a Toad Bandit in its Lane, then mash to lasso it!</div>
+      </div>
+      <button class="big" id="play" type="button">PLAY</button>
+    </section>
+
+    <section class="screen" id="screen-results">
+      <h2 id="results-title"></h2>
+      <div class="bounty" id="results-bounty"></div>
+      <div class="row">
+        <div class="panel"><table id="results-table"></table></div>
+        <div class="panel" style="max-width: 42cqw">
+          <p><b>Did you know?</b></p>
+          <p id="results-fact"></p>
+        </div>
+      </div>
+      <button class="big" id="results-next" type="button">SAVE MY BOUNTY</button>
+    </section>
+
+    <section class="screen" id="screen-save">
+      <p>Your Codename is</p>
+      <div class="codename" id="save-codename"></div>
+      <button class="big" id="save-go" type="button">SAVE</button>
+      <div class="row">
+        <button class="plain" id="save-reroll" type="button">🎲 New name</button>
+        <button class="plain" id="save-skip" type="button">Skip</button>
+      </div>
+      <button class="link" id="save-returning" type="button">Returning player?</button>
+    </section>
+
+    <section class="screen" id="screen-returning">
+      <h2>Welcome back, Rider</h2>
+      <form id="returning-form">
+        <label for="returning-input">Type the Codename you used before</label><br><br>
+        <input id="returning-input" autocomplete="off" autocapitalize="words" spellcheck="false" maxlength="40">
+        <p class="error" id="returning-error" role="alert"></p>
+        <div class="row">
+          <button type="submit">That's me</button>
+          <button class="plain" type="button" id="returning-back">Back</button>
+        </div>
+      </form>
+    </section>
+
+    <section class="screen" id="screen-rank">
+      <h2 id="rank-title"></h2>
+      <p id="rank-note"></p>
+      <div class="panel"><table id="rank-table"></table></div>
+      <button class="big" id="rank-again" type="button">PLAY AGAIN</button>
+    </section>
+
+    <section class="screen" id="screen-admin">
+      <h2>Leaderboard admin</h2>
+      <form id="admin-form">
+        <input id="admin-code" type="password" placeholder="Admin code" autocomplete="off">
+        <button type="submit">Open</button>
+        <p class="error" id="admin-error" role="alert"></p>
+      </form>
+      <div id="admin-body" hidden>
+        <div class="panel"><table id="admin-table"></table></div><br>
+        <div class="row">
+          <button class="plain" id="admin-clear" type="button">Clear all</button>
+          <button id="admin-close" type="button">Done</button>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <div id="rotate">Turn your phone sideways to ride! 🤠</div>
+
+  <script src="config.js"></script>
+  <script src="logic.js"></script>
+  <script src="game.js"></script>
+</body>
+</html>
