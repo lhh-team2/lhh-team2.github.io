@@ -96,7 +96,7 @@ Composition: keep all characters in the lower two-thirds. Leave the top third as
 
 ## Game sprites (phase 1)
 
-Rules and sprite list come from [`game.md`](game.md). Phase 1 uses one static sprite per thing; the game code adds the bobbing, leaning, and dust. Paste the Setup message first, as always. Save each full-size result into `art/sprites/` under the filename given, then run `python3 art/make-sprites.py` from the repo root. It erases ChatGPT's faint glow, trims the empty margins, shrinks everything, and writes the game-ready files to `game/sprites/`.
+Rules and sprite list come from [`game.md`](game.md). Each character starts as one static sprite; the game code adds the bobbing, leaning, and dust. Second animation frames come after, in the next section. Paste the Setup message first, as always. Save each full-size result into `art/sprites/` under the filename given, then run `python3 art/make-sprites.py` from the repo root. It erases ChatGPT's faint glow, trims the empty margins, shrinks everything, and writes the game-ready files to `game/sprites/`.
 
 ### 9–11. Mounted Riders
 
@@ -143,6 +143,57 @@ Create a wide scrolling game background of the Australian outback at sunset, 3:2
 Top 40%: sky in a smooth gradient from sunset orange at the horizon to dusk purple at the top, with generic flat-topped rock outcrops, a few scattered gum trees, and one distant farm windmill with a water tank on the horizon (do not depict Uluru or any real landmark).
 Bottom 60%: completely flat, empty red ochre earth with only very subtle tonal variation. Nothing may be drawn on it (no plants, rocks, tracks, or shadows) because game lanes are drawn over this area.
 ```
+
+---
+
+## Animation: second frames
+
+The game flips between two pictures of each character to make it run. Frame 1 is the sprite you already have; these prompts make frame 2. A missing frame 2 is fine: that character just stays on frame 1.
+
+Frame 2 only works if it is **the same drawing with different legs**. So the Rider prompts attach frame 1 itself (the full-size file from `art/sprites/`, not the small one in `game/sprites/`) and ask ChatGPT to change as little as possible. (The toad needs a different trick; see prompt 19.) After each result, check it against frame 1 before saving:
+
+- Same size? Flip between the two images in a viewer. The hat, head, and body should stay put while only the legs move.
+- Same details? Bandana, eye color, star, saddle, and the horse's color all unchanged.
+- If something drifted, reply with a targeted fix (*"the rider's head got bigger; match the attached frame 1 exactly"*) rather than starting over.
+
+Save into `art/sprites/` under the filename given and run `python3 art/make-sprites.py`. If a frame 2 still looks slightly bigger or smaller than frame 1 in the game, nudge it with `FRAME_2_SIZE_FIX` at the top of that script. Gallop speed per gear is `stridesPerSecond` in `game/config.js`.
+
+### 16–18. Mounted Riders, gallop frame 2 (fully extended)
+
+Run three times. Upload: that Rider's frame 1 from `art/sprites/` (for example `silver-rider.png`), plus that Rider's sheet and the Robot Horse sheet. Files: `silver-rider-2.png`, `black-rider-2.png`, `grey-rider-2.png`.
+
+```text
+The attached sprite is frame 1 of a two-frame gallop animation: the horse's legs are gathered under its body. Create frame 2: the same horse and rider at full stretch.
+
+Redraw the attached sprite exactly: same character designs, same colors, same outline weight, same size on the canvas, same position on the canvas, same strict side view facing right, same 3:2 landscape canvas, transparent background, no ground, no ground shadow, no dust, no scenery, no text.
+
+Change ONLY these things:
+- The horse's front legs reach straight out forward and its hind legs stretch straight out behind, all four hooves off the ground, in the classic fully extended gallop pose.
+- The horse's neck and head stretch slightly forward, and its mane and tail stream back a little flatter.
+- The rider's hat brim and bandana tails flutter back slightly.
+
+Do not change the rider's pose, the rider's or horse's proportions, the saddle, the reins, the lasso, or anything else. The horse's body and the rider must line up with frame 1 when the two images are laid on top of each other.
+```
+
+### 19. Toad Bandit, both running frames in one image
+
+Attaching frame 1 and asking for "the same but with the legs swapped" does not work for the toad: ChatGPT hands back a copy of the attachment. So this prompt does **not** attach the sprite. It asks for both frames, freshly drawn side by side in one image, which keeps them consistent with each other. Use a **new chat** (paste the Setup message first) so earlier attempts don't pull it back to the old picture.
+
+Upload: the Toad Bandit sheet only. File: `toad-bandit-run.png`. The script cuts it into the two frames, and they replace `toad-bandit.png`, so it doesn't matter that the new toad isn't pixel-identical to the old one.
+
+```text
+Generate a brand new image (do not edit or reuse an earlier image): a two-frame run cycle sprite sheet of the TOAD BANDIT, using the attached sheet only as the character design reference.
+
+Landscape 3:2, transparent background, no ground, no ground shadows, no dust, no scenery. Two drawings of the same character side by side, one in the left half and one in the right half, with a clear empty gap between them, not touching or overlapping. Both are the same size, stand at the same height, and are seen from the same strict side view facing right, full body. In both, it runs upright, clutches its "$" money bag against its chest with both arms, and looks back over its shoulder in comic panic. The head, hat, mask, arms, bag, and body are identical in both drawings. Only the legs differ:
+
+LEFT drawing: the near leg (closest to the viewer) is swung far forward with the knee lifted high and the foot out in front; the far leg is stretched straight out behind, toes pushing off.
+
+RIGHT drawing: the opposite stride. The near leg is stretched straight out behind, toes pushing off; the far leg is swung far forward with the knee lifted high and the foot out in front.
+
+The two leg poses must be obviously different at a glance. No text other than the "$" on each bag.
+```
+
+If the two drawings come back with the same legs again, say which drawing is wrong and what its legs should do (*"the right-hand toad's legs match the left one; its near leg should be stretched out behind"*). Until a second frame exists, the game rocks the single toad picture back and forth as it hops, so it already reads as running.
 
 ---
 

@@ -82,12 +82,14 @@ Any screen other than the Run returns to Title after 30 s without input, so the 
 
 ## Art
 
-Static transparent sprites in `game/sprites/`, made from the full-size originals in `art/sprites/` by `python3 art/make-sprites.py`; the code supplies gallop bob, lean on Lane change, dust puffs, and squash-and-stretch. Prompts are in [`art-prompts.md`](art-prompts.md#game-sprites-phase-1).
+Static transparent sprites in `game/sprites/`, made from the full-size originals in `art/sprites/` by `python3 art/make-sprites.py`; the code supplies gallop bob, lean on Lane change, and dust puffs. Riders and the running Toad Bandit can each have a second animation frame (`name-2.png`: horse fully extended, toad on the opposite stride) that the game alternates with the first; without one, that character stays on frame 1. Prompts are in [`art-prompts.md`](art-prompts.md#game-sprites-phase-1).
 
 | File | What |
 |---|---|
 | `silver-rider.png`, `black-rider.png`, `grey-rider.png` | each Rider mounted on a Robot Horse, side view facing right |
+| `silver-rider-2.png`, `black-rider-2.png`, `grey-rider-2.png` | optional gallop frame 2: horse fully extended |
 | `toad-bandit.png` | Toad Bandit sprinting, facing right |
+| `toad-bandit-2.png` | optional running frame 2: legs swapped. Made by the script from `art/sprites/toad-bandit-run.png` (both frames in one image). Without it the game rocks frame 1 to suggest running |
 | `toad-showdown.png` | Lasso Showdown close-up |
 | `loot-bag.png`, `prickly-pear.png`, `termite-mound.png` | props |
 | `background.jpg` | sideways-scrolling outback strip with empty ground for the Lanes |
@@ -100,7 +102,7 @@ Static transparent sprites in `game/sprites/`, made from the full-size originals
 ## Later phases
 
 - Firebase leaderboard shared across devices. Admin actions need real authentication first (ADR 0001).
-- Sound, frame-by-frame animation, Riders with different stats.
+- Sound, more animation frames, Riders with different stats.
 
 ---
 

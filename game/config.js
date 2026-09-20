@@ -12,6 +12,8 @@ const CONFIG = {
   startGear: 2,
   gearSpeed: [0, 200, 280, 380, 480, 580], // pixels per second
   gearDecaySeconds: 6, // lose a gear if the meter is ignored this long
+  stridesPerSecond: [0, 2.0, 2.5, 3.0, 3.6, 4.2], // how fast the gallop animation plays in each gear
+  toadStepsPerSecond: 5,
   hazardGearLoss: 2,
   lostShowdownGearLoss: 1,
 

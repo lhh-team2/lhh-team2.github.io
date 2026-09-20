@@ -29,7 +29,9 @@ const pickOne = (list) => list[Math.floor(Math.random() * list.length)];
 
 // Sprites are made by art/make-sprites.py. If a file is missing, a simple drawn shape stands in.
 const SPRITES = {};
+// A name ending in -2 is the second animation frame of the sprite without it.
 for (const file of ["silver-rider.png", "black-rider.png", "grey-rider.png", "toad-bandit.png",
+  "silver-rider-2.png", "black-rider-2.png", "grey-rider-2.png", "toad-bandit-2.png",
   "toad-showdown.png", "loot-bag.png", "prickly-pear.png", "termite-mound.png", "background.jpg"]) {
   const img = new Image();
   img.onload = () => { SPRITES[file.split(".")[0]] = img; };
@@ -69,6 +71,7 @@ function newRun() {
   return {
     time: CONFIG.runSeconds,
     clock: 0,
+    stride: 0, // gallop animation: whole number = strides taken, fraction = how far through this one
     bounty: 0, fromBags: 0, fromToads: 0, timeBonus: 0,
     gear: CONFIG.startGear,
     dist: 0,
@@ -121,6 +124,7 @@ function updateRun(dt) {
 
   const speed = CONFIG.gearSpeed[r.gear];
   r.dist += speed * dt;
+  r.stride += CONFIG.stridesPerSecond[r.gear] * dt;
   r.y += (LANES[r.lane].y - r.y) * Math.min(1, dt * 14);
 
   // Giddy-Up Meter
@@ -301,9 +305,12 @@ addEventListener("pointerdown", () => { lastInput = performance.now(); });
 
 // ─────────────────────────────── Drawing ───────────────────────────────
 
-function drawSprite(name, x, feetY, height, fallback) {
-  const img = SPRITES[name];
-  if (!img) return fallback(x, feetY, height);
+// `phase` counts animation steps; the second half of each step shows the -2 frame if there is one.
+function drawSprite(name, x, feetY, height, fallback, phase = 0) {
+  const first = SPRITES[name];
+  if (!first) return fallback(x, feetY, height);
+  const img = (phase % 1 >= 0.5 && SPRITES[name + "-2"]) || first;
+  height *= img.height / first.height; // make-sprites.py keeps both frames at one scale, so sizes compare
   const width = height * img.width / img.height;
   ctx.drawImage(img, x - width / 2, feetY - height, width, height);
 }
@@ -424,8 +431,15 @@ function drawRun() {
       ctx.globalAlpha = 1;
     }
     if (r.toad && r.toad.lane === i) {
-      const hop = Math.abs(Math.sin(r.clock * 14)) * 10;
-      drawSprite("toad-bandit", r.toad.x, lane.y - hop, 84 * lane.scale, FALLBACK.toad);
+      const step = r.clock * CONFIG.toadStepsPerSecond;
+      const hop = Math.abs(Math.sin(step * Math.PI * 2)) * 8;
+      // With no second frame to flip to, rocking the one picture back and forth reads as running.
+      const rock = SPRITES["toad-bandit-2"] ? 0 : Math.sin(step * Math.PI * 2) * 0.16;
+      ctx.save();
+      ctx.translate(r.toad.x, lane.y - hop);
+      ctx.rotate(rock);
+      drawSprite("toad-bandit", 0, 0, 84 * lane.scale, FALLBACK.toad, step);
+      ctx.restore();
     }
     if (r.lane === i) drawRider(RIDER_X, r.y, 128 * lane.scale, (LANES[r.lane].y - r.y) * 0.004);
   });
@@ -441,11 +455,11 @@ function drawRun() {
 }
 
 function drawRider(x, feetY, height, lean) {
-  const bob = Math.sin(run.clock * (6 + run.gear * 2)) * 4;
+  const bob = -Math.max(0, Math.sin(run.stride * Math.PI * 2)) * 7; // airborne while the legs are tucked (frame 1)
   ctx.save();
   ctx.translate(x, feetY + bob);
   ctx.rotate(lean);
-  drawSprite(rider.id + "-rider", 0, 0, height, FALLBACK.rider);
+  drawSprite(rider.id + "-rider", 0, 0, height, FALLBACK.rider, run.stride);
   ctx.restore();
 }
 
