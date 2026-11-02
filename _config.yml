@@ -30,6 +30,8 @@ nav:
     url: /game/
   - title: Gallery
     url: /gallery/
+  - title: Project Design
+    url: /design/
 
 # ═══════════════════════════════════════════════════════════════
 #  BELOW HERE IS PLUMBING — you shouldn't need to touch it.
