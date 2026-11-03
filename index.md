@@ -3,5 +3,4 @@ layout: home
 title: Our Team Blog
 ---
 
-Welcome! Write a sentence or two here about your team — what program you're in,
-what you're building this season, who you are.
+Welcome to our team blog. We are the Terminators, an FLL Challenge team, part of the Lansing Homeschool Hackers.
