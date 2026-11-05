@@ -3,22 +3,12 @@ title: About Our Team
 permalink: /about/
 ---
 
-Tell people who you are. A few ideas:
-
 ## Our team
 
-What's your team name and number? What program are you in — FLL Explore,
-FLL Challenge? How long has the team been around?
+We are the Terminators, FLL Challenge team #68666.
 
-## Our members
+## This season (2026-27)
 
-- Name — what you work on
-- Name — what you work on
+For the BioGlow season, we chose to have an innovation project focused on getting rid of cane toads in Australia. They are an invasive species that has been a problem for about 100 years.
 
-## This season
-
-What's the challenge, and what are you trying to build?
-
-## Our coaches
-
-Who helps your team out?
+You can see our design schematic at <https://lhh-team2.github.io/design/>
