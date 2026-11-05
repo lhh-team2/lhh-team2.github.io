@@ -6,11 +6,10 @@ video: https://app.screencast.com/4SC3iexlshLzS
 # A picture or short video of your design. Upload it to assets/images first.
 schematic: /assets/images/schematic.png
 # Optional one-line caption under the schematic.
-schematic_caption:
+schematic_caption: The Terminator
 ---
 
-How our robot works, in one picture and one video. Change this sentence to say
-what your design does and why you built it that way.
+The Terminator is our solution for getting rid of cane toads. It attracts cane toad tadpoles using dead tadpoles as the bait. When it catches more tadpoles, those become the bait for the next group of tadpoles.
 
 <style>
   .design-figure { margin: 0 0 1rem; text-align: center; }
@@ -51,8 +50,3 @@ what your design does and why you built it that way.
 
 <p><a href="{{ page.video }}">Watch on Screencast &rarr;</a></p>
 {% endif %}
-
-## How it works
-
-Walk people through your design. A few ideas: what each part of the robot does,
-what problem it solves, what you tried first, and what you'd change next time.
